@@ -31,12 +31,12 @@ switch ($method) {
          $person->signup();
 
 
-        // if ($stmt->execute()) {
-        //     $response = ['status' => 1, 'message' => 'Registration successfully.'];
-        //     // header('Location: http://localhost:80/boq_master/src/App.js')
-        // } else {
-        //     $response = ['status' => 0, 'message' => 'Failed to Register.'];
-        // }
-        // echo json_encode($response);
+        if ($stmt->execute()) {
+            $response = ['status' => 1, 'message' => 'Registration successfully.'];
+            // header('Location: http://localhost:80/boq_master/src/App.js')
+        } else {
+            $response = ['status' => 0, 'message' => 'Failed to Register.'];
+        }
+        echo json_encode($response);
         break;
 }
