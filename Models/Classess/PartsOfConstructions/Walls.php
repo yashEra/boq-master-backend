@@ -6,10 +6,9 @@ class Wall
     private $width;
     private $length;
 
-    public function __construct($height, $width, $length)
+    public function __construct($height, $length)
     {
         $this->height = $height;
-        $this->width = $width;
         $this->length = $length;
     }
 
