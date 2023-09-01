@@ -23,6 +23,7 @@ $data = json_decode(file_get_contents("php://input"));
 $height = $data->height;
 $length = $data->length;
 $unit = $data->unit;
+$brickTypes = $data->brickTypes;
 
 $wallobj = new Walls($height, $length);
 
@@ -31,7 +32,8 @@ $response = array(
   "message" => "Data received successfully",
   "height" => $height,
   "length" => $length,
-  "unit" => $unit
+  "unit" => $unit,
+  "brickType" => $brickTypes
 );
 
 

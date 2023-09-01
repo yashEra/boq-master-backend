@@ -9,7 +9,7 @@ class Slab
     private $sand = 15; //cubic feet for one cubic meter
     private $metal = 30; // cubic feet for one cubic meter
     private $reinforcementBars = 20.202; //Reinforcement bars square meter -1 for Kg
-    private $bindingWires = $reinforcementBars * 0.01; //Binding wires square meter -1 for Kg
+    private $bindingWires = 20.202 * 0.01; //Binding wires square meter -1 for Kg
     private $numberOfSlabs;
 
     public function __construct($length, $width, $thickness, $numberOfSlabs)

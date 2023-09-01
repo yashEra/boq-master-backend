@@ -35,20 +35,24 @@ public function getPriceOfClayBrick(){
 
     $dbobj = new DbConnector();
     $conn = $dbobj->getConnection();
-    $sql = "SELECT price FROM raw_materials WHERE material_name=clay_brick";
+    $sql = "SELECT price FROM raw_materials WHERE material_name=clayBrick";
 
     $pstmt = $conn->prepare($sql);
     $rs= $pstmt->execute();
 
-    
-
-
+    return $rs;
 }
 
 public function priceOfCementBricks(){
     $dbobj = new DbConnector();
     $conn = $dbobj->getConnection();
 
-    $sql = "SELECT price FROM raw_materials WHERE material_name=cement_brick";
+    $sql = "SELECT price FROM raw_materials WHERE material_name=cementBrick";
+
+    $pstmt = $conn->prepare($sql);
+    $rs= $pstmt->execute();
+
+    return $rs;
+    
 }
 }
