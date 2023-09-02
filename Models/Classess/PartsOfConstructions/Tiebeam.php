@@ -1,4 +1,9 @@
 <?php
+require './boq-master-backend/config/DbConnector.php';
+
+use boq-master-backend\config\DbConnector;
+use PDO;
+use PDOException;
 
 class Tiebeams
 {
@@ -30,34 +35,119 @@ class Tiebeams
         return $sq;
     }
 
+    public function getCementQuantityForTiebeam()
+    {
+        $cementQuantity = $this->cement * $this->getVolOfTiebeam();
+        return $cementQuantity;
+    }
+
     public function getCementPriceForTiebeam()
     {
-        $cementPrice = $this->cement * $this->getVolOfTiebeam();
-        return $cementPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM cement";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $cementPrice =  $rs * $this->getCementQuantityForTiebeam();
+            return $cementPrice;
+            
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getSandQuantityForTiebeam()
+    {
+        $sandQuantity = $this->sand * $this->getVolOfTiebeam();
+        return $sandQuantity;
     }
 
     public function getSandPriceForTiebeam()
     {
-        $sandPrice = $this->sand * $this->getVolOfTiebeam();
-        return $sandPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM sand";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $sandPrice =  $rs * $this->getSandQuantityForTiebeam();
+            return $sandPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getMetalQuantityForTiebeam()
+    {
+        $metalQuantity = $this->metal * $this->getVolOfTiebeam();
+        return $metalQuantity;
     }
 
     public function getMetalPriceForTiebeam()
     {
-        $metalPrice = $this->metal * $this->getVolOfTiebeam();
-        return $metalPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM metal";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $metalPrice =  $rs * $this->getMetalQuantityForTiebeam();
+            return $metalPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getReinforcementQuantityForTiebeam()
+    {
+        $reinforcementQuantity = $this->reinforcementBars * $this->getSqOfTiebeam();
+        return $reinforcementQuantity;
     }
 
     public function getReinforcementPriceForTiebeam()
     {
-        $reinforcementPrice = $this->reinforcementBars * $this->getSqOfTiebeam();
-        return $reinforcementPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM reinforcement";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $reinforcementPrice =  $rs * $this->getReinforcementQuantityForTiebeam();
+            return $reinforcementPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getBindingWiresQuantityForTiebeam()
+    {
+        $bindingWiresQuantity = $this->bindingWires * $this->getSqOfTiebeam();
+        return $bindingWiresQuantity;
     }
 
     public function getBindingWiresPriceForTiebeam()
     {
-        $bindingWiresPrice = $this->bindingWires * $this->getSqOfTiebeam();
-        return $bindingWiresPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM bindingWires";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $bindingWiresPrice =  $rs * $this->getBindingWiresQuantityForTiebeam();
+            return $bindingWiresPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        } 
     }
 
     public function getTotalCostForTiebeam()
