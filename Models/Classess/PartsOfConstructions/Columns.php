@@ -1,4 +1,9 @@
 <?php
+require './boq-master-backend/config/DbConnector.php';
+
+use boq-master-backend\config\DbConnector;
+use PDO;
+use PDOException;
 
 class Column{
     private $length;
@@ -29,29 +34,114 @@ class Column{
         return $sq;
     } 
 
+    public function getCementQuantityForColumn()
+    {
+        $cementQuantity = $this->cement * $this->getVolOfColumn();
+        return $cementQuantity;
+    }
+
     public function getCementPriceForColumn(){
-        $cementPrice = $this->cement* $this->getVolOfColumn();
-        return $cementPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM cement";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $cementPrice =  $rs * $this->getCementQuantityForColumn();
+            return $cementPrice;
+            
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getSandQuantityForColumn()
+    {
+        $sandQuantity = $this->sand * $this->getVolOfColumn();
+        return $sandQuantity;
     }
 
     public function getSandPriceForColumn(){
-        $sandPrice = $this->sand* $this->getVolOfColumn();
-        return $sandPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM sand";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $sandPrice =  $rs * $this->getSandQuantityForColumn();
+            return $sandPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getMetalQuantityForColumn()
+    {
+        $metalQuantity = $this->metal * $this->getVolOfColumn();
+        return $metalQuantity;
     }
 
     public function getMetalPriceForColumn(){
-        $metalPrice = $this->metal* $this->getVolOfColumn();
-        return $metalPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM metal";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $metalPrice =  $rs * $this->getMetalQuantityForColumn();
+            return $metalPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getReinforcementQuantityForColumn()
+    {
+        $reinforcementQuantity = $this->reinforcementBars * $this->getSqOfColumn();
+        return $reinforcementQuantity;
     }
 
     public function getReinforcementPriceForColumn(){
-        $reinforcementPrice = $this->reinforcementBars* $this->getSqOfColumn();
-        return $reinforcementPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM reinforcement";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $reinforcementPrice =  $rs * $this->getReinforcementQuantityForColumn();
+            return $reinforcementPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getBindingWiresQuantityForColumn()
+    {
+        $bindingWiresQuantity = $this->bindingWires * $this->getSqOfColumn();
+        return $bindingWiresQuantity;
     }
 
     public function getBindingWiresPriceForColumn(){
-        $bindingWiresPrice = $this->bindingWires* $this->getSqOfColumn();
-        return $bindingWiresPrice;
+       $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM bindingWires";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $bindingWiresPrice =  $rs * $this->getBindingWiresQuantityForColumn();
+            return $bindingWiresPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        } 
     }
 
     public function getTotalCostForColumn(){

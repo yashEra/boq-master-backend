@@ -1,5 +1,11 @@
 <?php
 
+require './boq-master-backend/config/DbConnector.php';
+
+use boq-master-backend\config\DbConnector;
+use PDO;
+use PDOException;
+
 class Slab
 {
     private $length; // length of the slab
@@ -32,34 +38,119 @@ class Slab
         return $sq;
     }
 
+    public function getCementQuantityForSlab()
+    {
+        $cementQuantity = $this->cement * $this->getVolOfSlab();
+        return $cementQuantity;
+    }
+
     public function getCementPriceForSlab()
     {
-        $cementPrice = $this->cement * $this->getVolOfSlab();
-        return $cementPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM cement";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $cementPrice =  $rs * $this->getCementQuantityForSlab();
+            return $cementPrice;
+            
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getSandQuantityForSlab()
+    {
+        $sandQuantity = $this->sand * $this->getVolOfSlab();
+        return $sandQuantity;
     }
 
     public function getSandPriceForSlab()
     {
-        $sandPrice = $this->sand * $this->getVolOfSlab();
-        return $sandPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM sand";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $sandPrice =  $rs * $this->getSandQuantityForSlab();
+            return $sandPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getMetalQuantityForSlab()
+    {
+        $metalQuantity = $this->metal * $this->getVolOfSlab();
+        return $metalQuantity;
     }
 
     public function getMetalPriceForSlab()
     {
-        $metalPrice = $this->metal * $this->getVolOfSlab();
-        return $metalPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM metal";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $metalPrice =  $rs * $this->getMetalQuantityForSlab();
+            return $metalPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getReinforcementQuantityForSlab()
+    {
+        $reinforcementQuantity = $this->reinforcementBars * $this->getSqOfSlab();
+        return $reinforcementQuantity;
     }
 
     public function getReinforcementPriceForSlab()
     {
-        $reinforcementPrice = $this->reinforcementBars * $this->getSqOfSlab();
-        return $reinforcementPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM reinforcement";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $reinforcementPrice =  $rs * $this->getReinforcementQuantityForSlab();
+            return $reinforcementPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getBindingWiresQuantityForSlab()
+    {
+        $bindingWiresQuantity = $this->bindingWires * $this->getSqOfSlab();
+        return $bindingWiresQuantity;
     }
 
     public function getBindingWiresPriceForSlab()
     {
-        $bindingWiresPrice = $this->bindingWires * $this->getSqOfSlab();
-        return $bindingWiresPrice;
+        $dbcon = new DbConnector();
+        try {
+            $con = $dbcon->getConnection();
+            $query = "SELECT price FROM bindingWires";
+            $pstmt = $con->prepare($query);
+            $rs = $pstmt->execute();
+
+            $bindingWiresPrice =  $rs * $this->getBindingWiresQuantityForSlab();
+            return $bindingWiresPrice;
+
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        } 
     }
 
     public function getTotalCostForSlab()
