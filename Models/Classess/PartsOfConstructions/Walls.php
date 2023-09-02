@@ -1,6 +1,15 @@
 <?php
+// include '../RowMaterials/Bricks.php';
 
-include '../RowMaterials/Bricks.php';
+// use RowMaterials\Bricks;
+
+// $bricks = new Bricks();
+
+// include './DbConnector.php';
+
+// use config\DbConnector;
+
+// $dbobj = new DbConnector();
 
 class Wall
 
@@ -9,8 +18,16 @@ class Wall
     private $width;
     private $length;
     private $typeOfBrick;
-    private $numberOfClayBricks = 71.46; //for 1 squre meeter
+    private $numberOfClayBricks = 45.56 ; //for 1 squre meeter
     private $numberOfCementBricks = 71.46;
+    private $CementBrickPrice = 100;
+    private $clayBrickPrice = 100;
+    private $cement = 1;
+    private $sand= 100;
+    private $cementPrice = 3000/50;
+    private $sandPrice= 100;//for 1 unit
+
+
 
     public function __construct($height, $length, $typeOfBrick)
     {
@@ -25,36 +42,34 @@ class Wall
 
         return $wallArea;
     }
+
     public function getBricksQuantity()
     {
-        //$cost;
-
         if ($this->typeOfBrick === "clayBrick") {
-            $bricksQuantity = $this->numberOfClayBricks * getWallArea();
+            $bricksQuantity = $this->numberOfClayBricks * $this->getWallArea();
         } else {
-
-            $bricksQuantity = $this->numberOfCementBricks * getWallArea();
+            $bricksQuantity = $this->numberOfCementBricks * $this->getWallArea();
         }
-
-
         return $bricksQuantity;
     }
 
+
     public function getCement()
     {
-        //$cost;
+        $cementQuantity = 0;
+
         if ($this->typeOfBrick === "clayBrick") {
-            $cementQuantity = "";
+            $cementQuantity = 1;
         } else {
         }
 
 
-        //return $cementQuantity;
+        return $cementQuantity;
     }
 
     public function getSand()
     {
-        //$cost;
+        $sandQuantity = 0;
         if ($this->typeOfBrick === "clayBrick") {
             $sandQuantity = "";
         } else {
@@ -64,19 +79,62 @@ class Wall
         return $sandQuantity;
     }
 
+/***************************************************************************************** 
+WALLCOST
+**************************************************************************************** */
 
     public function getWallCost()
     {
-        //$cost;
+        $cost = 0;
+        $sandPrice = $this->sandPrice *$this->getWallArea();
+        $cement = $this->cementPrice *$this->getWallArea();
 
-        if ($this->typeOfBrick === "clayBrick") {
+        if ($this->typeOfBrick === "Clay Brick") {
+            $cost = (($this->numberOfClayBricks *  $this->getWallArea()) *  $this->clayBrickPrice) + ($sandPrice)+ ($cement);
+        }else{
 
-            $cost = $this->numberOfClayBricks * getWallArea();
+            $cost = (($this->numberOfCementBricks *  $this->getWallArea()) *  $this->clayBrickPrice) + ($sandPrice)+ ($cement);
         }
-
-
         return $cost;
     }
+
+
+    /***************************************************************************************** 
+WALLQuantity
+**************************************************************************************** */
+public function getBrickQuantity()
+{
+    $bricksQuantity = 0;
+
+    if ($this->typeOfBrick === "Clay Brick") {
+        $bricksQuantity = ($this->numberOfClayBricks *  $this->getWallArea());
+    }else{
+
+        $bricksQuantity = ($this->numberOfCementBricks *  $this->getWallArea());
+    }
+    return $bricksQuantity;
+}
+
+public function getcementQuantity()
+{
+    $cementQuantity = 0;
+
+        $cementQuantity = ($this->cement *  $this->getWallArea());
+
+    return $cementQuantity;
+}
+
+public function getSandQuantity()
+{
+    $sandQuantity = 0;
+
+        $sandQuantity = ($this->sand *  $this->getWallArea());
+
+    return $sandQuantity;
+}
+
+    /*************************************************************************************************** */
+
 
     public function getHeight()
     {
@@ -108,3 +166,21 @@ class Wall
         $this->length = $length;
     }
 }
+
+// class DbConnector {
+//     private $server = 'localhost';
+//     private $dbname = 'boq_master';
+//     private $user = 'root';
+//     private $pass = '';
+
+//     public function getConnection() {
+//         try {
+//             $conn = new PDO('mysql:host=' .$this->server .';dbname=' . $this->dbname, $this->user, $this->pass);
+//             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//             return $conn;
+//         } catch (PDOException $e) {
+//             echo "Database Error: " . $e->getMessage();
+//         }
+//     }
+    
+// }

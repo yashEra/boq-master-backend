@@ -20,20 +20,35 @@ require_once '../../Classess/PartsOfConstructions/Walls.php';
 $data = json_decode(file_get_contents("php://input"));
 
 // Example: Accessing the "height", "length", and "unit" fields
-$height = $data->height;
-$length = $data->length;
+// $height = $data->height;
+// $length = $data->length;
 $unit = $data->unit;
 $brickTypes = $data->brickTypes;
 
-$wallobj = new Walls($height, $length);
+if($unit ==="ft"){
+
+  $height = ($data->height)*0.3048;
+  $length = ($data->length)*0.3048;
+
+}else{
+  $height = $data->height;
+  $length = $data->length;
+}
+
+$wallobj = new Wall($height, $length, $brickTypes);
+
+$noOfBricks = $wallobj->getBricksQuantity();
 
 // Process the data or perform necessary actions
 $response = array(
   "message" => "Data received successfully",
-  "height" => $height,
+  "numberOfBricks" => $wallobj->getBricksQuantity(),
   "length" => $length,
   "unit" => $unit,
-  "brickType" => $brickTypes
+  "brickType" => $brickTypes,
+  "CementKg" =>$wallobj->getcementQuantity(),
+  "Sand" =>$wallobj->getSandQuantity(),
+  "cost" => $wallobj->getWallCost()
 );
 
 

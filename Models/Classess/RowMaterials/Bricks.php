@@ -1,5 +1,11 @@
 <?php
-require_once '../../config/DbConnector.php';
+
+namespace RowMaterials;
+
+include '../../config/DbConnector.php';
+
+use config\DbConnector;
+use PDO;
 
 $dbobj = new DbConnector();
 
@@ -31,28 +37,46 @@ public function getVolOfCementBricks(){
 
 }
 
-public function getPriceOfClayBrick(){
-
-    $dbobj = new DbConnector();
-    $conn = $dbobj->getConnection();
-    $sql = "SELECT price FROM raw_materials WHERE material_name=clayBrick";
-
-    $pstmt = $conn->prepare($sql);
-    $rs= $pstmt->execute();
-
-    return $rs;
-}
-
-public function priceOfCementBricks(){
+public function getPriceOfClayBrick()
+{
     $dbobj = new DbConnector();
     $conn = $dbobj->getConnection();
 
-    $sql = "SELECT price FROM raw_materials WHERE material_name=cementBrick";
+    $sql = "SELECT material_price FROM raw_materials WHERE material_name='clayBrick'";
 
     $pstmt = $conn->prepare($sql);
-    $rs= $pstmt->execute();
+    $pstmt->execute();
 
-    return $rs;
-    
+    // Fetch the result
+    $result = $pstmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result !== false) {
+        return $result['material_price'];
+    } else {
+        // Handle the case where no result is found
+        return null;
+    }
 }
+
+public function getPriceOfCementBrick()
+{
+    $dbobj = new DbConnector();
+    $conn = $dbobj->getConnection();
+
+    $sql = "SELECT material_price FROM raw_materials WHERE material_name='cementBrick'";
+
+    $pstmt = $conn->prepare($sql);
+    $pstmt->execute();
+
+    // Fetch the result
+    $result = $pstmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result !== false) {
+        return $result['material_price'];
+    } else {
+        // Handle the case where no result is found
+        return null;
+    }
+}
+
 }
