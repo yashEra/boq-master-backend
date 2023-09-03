@@ -2,12 +2,13 @@
 
 namespace RowMaterials;
 
-include '../../config/DbConnector.php';
+include 'DbConnect.php';
 
-use config\DbConnector;
+use RowMaterials\DbConnect;
+
 use PDO;
 
-$dbobj = new DbConnector();
+$dbobj = new DbConnect();
 
 
 class Bricks{
@@ -39,7 +40,7 @@ public function getVolOfCementBricks(){
 
 public function getPriceOfClayBrick()
 {
-    $dbobj = new DbConnector();
+    $dbobj = new DbConnect();
     $conn = $dbobj->getConnection();
 
     $sql = "SELECT material_price FROM raw_materials WHERE material_name='clayBrick'";
@@ -60,7 +61,7 @@ public function getPriceOfClayBrick()
 
 public function getPriceOfCementBrick()
 {
-    $dbobj = new DbConnector();
+    $dbobj = new DbConnect();
     $conn = $dbobj->getConnection();
 
     $sql = "SELECT material_price FROM raw_materials WHERE material_name='cementBrick'";

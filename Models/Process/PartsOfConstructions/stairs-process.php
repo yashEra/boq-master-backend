@@ -1,7 +1,4 @@
 <?php
-
-// use PartsOfConstructions\Walls;
-
 header("Content-Type: application/json");
 
 // Allow requests from your React app's origin
@@ -17,43 +14,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
   exit();
 }
 
-require_once '../../Classess/PartsOfConstructions/Walls.php';
-
-use PartsOfConstructions\Walls;
+require_once '../../Classess/PartsOfConstructions/Stairs.php';
+use classes\Stairs;
 
 // Get the posted data
 $data = json_decode(file_get_contents("php://input"));
 
-// Example: Accessing the "height", "length", and "unit" fields
-// $height = $data->height;
-// $length = $data->length;
 $unit = $data->unit;
-$brickTypes = $data->brickTypes;
+$noOfSteps = $data->noOfSteps;
 
 if($unit ==="ft"){
 
-  $height = ($data->height)*0.3048;
   $length = ($data->length)*0.3048;
+  $riser = ($data->riser)*0.3048;
+
+  $thread = ($data->thread)*0.3048;
+
+  $width = ($data->width)*0.3048;
+  $thickness = ($data->thickness)*0.3048;
+
 
 }else{
-  $height = $data->height;
+  
   $length = $data->length;
+  $riser = $data->riser;
+
+  $thread = $data->thread;
+
+  $width = $data->width;
+  $thickness = $data->thickness;
+
+  
 }
 
-$wallobj = new Walls($height, $length, $brickTypes);
-
-$noOfBricks = $wallobj->getBricksQuantity();
+$stairsobj = new Stairs($thickness, $length, $width, $riser, $thread, $noOfSteps);
 
 // Process the data or perform necessary actions
 $response = array(
   "message" => "Data received successfully",
-  "numberOfBricks" => $wallobj->getBricksQuantity(),
-  "length" => $length,
-  "unit" => $unit,
-  "brickType" => $brickTypes,
-  "CementKg" =>$wallobj->getcementQuantity(),
-  "Sand" =>$wallobj->getSandQuantity(),
-  "cost" => $wallobj->getWallCost()
+  "matel" => $length,
+  "cement" => $stairsobj->getCement(),
+  "sand" => $stairsobj->getSand(),
+  "rainforcementBars" => $stairsobj->getRainforcementBars(),
+  "bindingWires" => $stairsobj->getCement(),
+  "cost" => $stairsobj->getStairesTotalCost(),
+
 );
 
 

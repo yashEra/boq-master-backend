@@ -2,17 +2,11 @@
 	/**
 	* Database Connection
 	*/
-	// namespace config;
-
-// use PDO;
-// use PDOException;
-
+	namespace RowMaterials;
 	use PDOException;
-
 	use PDO;
-
     
-	class DbConnector {
+	class DbConnect {
 		private $server = 'localhost';
 		private $dbname = 'boq_master';
 		private $user = 'root';

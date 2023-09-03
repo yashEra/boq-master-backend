@@ -1,7 +1,9 @@
 <?php
-// include '../RowMaterials/Bricks.php';
+namespace PartsOfConstructions;
 
-// use RowMaterials\Bricks;
+include_once 'Bricks.php';
+
+use RowMaterials\Bricks;
 
 // $bricks = new Bricks();
 
@@ -11,7 +13,9 @@
 
 // $dbobj = new DbConnector();
 
-class Wall
+// use RowMaterials\Bricks;
+
+class Walls
 
 {
     private $height;
@@ -26,6 +30,7 @@ class Wall
     private $sand= 100;
     private $cementPrice = 3000/50;
     private $sandPrice= 100;//for 1 unit
+
 
 
 
@@ -85,8 +90,11 @@ WALLCOST
 
     public function getWallCost()
     {
+        $bricksObj = new Bricks();
+        $cost2 = $bricksObj->getPriceOfClayBrick();
+
         $cost = 0;
-        $sandPrice = $this->sandPrice *$this->getWallArea();
+        $sandPrice = $this->sandPrice *$this->getWallArea()*$cost2;
         $cement = $this->cementPrice *$this->getWallArea();
 
         if ($this->typeOfBrick === "Clay Brick") {
