@@ -1,39 +1,58 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-header("Access-Control-Allow-Methods: *");
+header("Content-Type: application/json");
 
-require_once '../Classess/PartsOfConstructions/Slabs.php';
+// Allow requests from your React app's origin
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Update with your React app's URL
 
-echo 'process';
+// Allow specific headers and methods
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 
-$data = json_decode(file_get_contents("php://input"), true);
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST['length']) || empty($_POST['width']) || empty($_POST['thickness'])) {
-        header('Location:');
-    } else {
-        $length = $_POST['length'];
-        $width = $_POST['width'];
-        $thickness = $_POST['thickness'];
-        $numberOfSlabs = $_POST['numberOfSlabs'];
-
-        $slab_process = new Slab($length, $width, $thickness, $numberOfSlabs);
-        $slab_process->getVolOfSlab();
-        $slab_process->getSqOfSlab();
-        $slab_process->getCementQuantityForSlab();
-        $slab_process->getCementPriceForSlab();
-        $slab_process->getSandQuantityForSlab();
-        $slab_process->getSandPriceForSlab();
-        $slab_process->getMetalQuantityForSlab();
-        $slab_process->getMetalPriceForSlab();
-        $slab_process->getReinforcementQuantityForSlab();
-        $slab_process->getReinforcementPriceForSlab();
-        $slab_process->getBindingWiresQuantityForSlab();
-        $slab_process->getBindingWiresPriceForSlab();
-        $slab_process->getTotalCostForSlab();
-    }
+// Check for preflight (OPTIONS) request
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+  http_response_code(204);
+  exit();
 }
+
+require_once '../../Classess/PartsOfConstructions/Slabs.php';
+use classes\Slabs;
+
+// Get the posted data
+$data = json_decode(file_get_contents("php://input"));
+
+$unit = $data->unit;
+
+if($unit ==="ft"){
+
+  $length = ($data->length)*0.3048;
+  $width = ($data->width)*0.3048;
+  $thickness = ($data->thickness)*0.3048;
+
+
+}else{
+  
+  $length = $data->length;
+  $width = $data->width;
+  $thickness = $data->thickness;
+
+  
+}
+
+$slabobj = new Slabs($length, $width, $thickness);
+
+// Process the data or perform necessary actions
+$response = array(
+  "message" => "Data received successfully",
+  "matel" => $length,
+//   "cement" => $stairsobj->getCement(),
+//   "sand" => $stairsobj->getSand(),
+//   "rainforcementBars" => $stairsobj->getRainforcementBars(),
+//   "bindingWires" => $stairsobj->getCement(),
+//   "cost" => $stairsobj->getStairesTotalCost(),
+
+);
+
+
+
+echo json_encode($response);
+?>

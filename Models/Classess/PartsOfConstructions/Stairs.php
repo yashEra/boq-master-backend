@@ -89,8 +89,8 @@ class Stairs
     }
     public function getBindingWires()
     {
-        $totVol = $this->length + $this->getStairsTotVol();
-        $bindingWires = $totVol * 11;
+        $totArea = $this->getStairsCaseArea();
+        $bindingWires = $totArea * 11;
         return $bindingWires;
     }
 /***************************************** COST CALCULATIONS **************************************** */
@@ -104,7 +104,7 @@ class Stairs
     public function getMatelCost()
     {
         $matalObj = new Matel();
-        $metalCost = $this->getCement()*$matalObj->getPriceOfMetal();//total 50kg cement bags
+        $metalCost = $this->getMatel()*$matalObj->getPriceOfMetal();//total 50kg cement bags
 
         return $metalCost;
     }
@@ -112,7 +112,7 @@ class Stairs
     public function getSandCost()
     {
         $sandObj = new Sand();
-        $metalCost = $this->getCement()*$sandObj->getPriceOfSand();//total 50kg cement bags
+        $metalCost = $this->getSand()*$sandObj->getPriceOfSand();//total 50kg cement bags
 
         return $metalCost;
     }
@@ -120,14 +120,14 @@ class Stairs
     public function getRainforcementBarsCost()
     {
         $rainforcementbarsObj = new RainforceentBars();
-        $rainforcementbars = $this->getCement()*$rainforcementbarsObj->getPriceOfReinforcementBars();//total 50kg cement bags
+        $rainforcementbars = $this->getRainforcementBars()*$rainforcementbarsObj->getPriceOfReinforcementBars();//total 50kg cement bags
 
         return $rainforcementbars;
     }
     public function getBindingWiresCost()
     {
-        $bindingWiresObj = new BindingWires;
-        $metalCost = $this->getCement()*$bindingWiresObj->getPriceOfBindingWires();//total 50kg cement bags
+        $bindingWiresObj = new BindingWires();
+        $metalCost = $this->getBindingWires()*$bindingWiresObj->getPriceOfBindingWires();//total 50kg cement bags
 
         return $metalCost;
     }

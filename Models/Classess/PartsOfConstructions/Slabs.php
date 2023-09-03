@@ -1,12 +1,19 @@
 <?php
+namespace classes;
 
-require './boq-master-backend/config/DbConnector.php';
+include_once 'Cement.php';
+include_once 'Matel.php';
+include_once 'Sand.php';
+include_once 'RainforceentBars.php';
+include_once 'BindingWires.php';
 
-use boq-master-backend\config\DbConnector;
-use PDO;
-use PDOException;
+use RowMaterials\BindingWires;
+use RowMaterials\Cement;
+use RowMaterials\Matel;
+use RowMaterials\RainforceentBars;
+use RowMaterials\Sand;
 
-class Slab
+class Slabs
 {
     private $length; // length of the slab
     private $width; // width of the slab
@@ -18,12 +25,11 @@ class Slab
     private $bindingWires = 20.202 * 0.01; //Binding wires square meter -1 for Kg
     private $numberOfSlabs;
 
-    public function __construct($length, $width, $thickness, $numberOfSlabs)
+    public function __construct($length, $width, $thickness)
     {
         $this->length = $length;
         $this->width = $width;
         $this->thickness = $thickness;
-        $this->numberOfSlabs = $numberOfSlabs;
     }
 
     public function getVolOfSlab()
@@ -46,19 +52,11 @@ class Slab
 
     public function getCementPriceForSlab()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM cement";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $cementObj = new Cement();
+        $cementCost = $this->getCementQuantityForSlab()*$cementObj->getPriceOfCementBag();
 
-            $cementPrice =  $rs * $this->getCementQuantityForSlab();
-            return $cementPrice;
-            
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $cementCost;
+
     }
 
     public function getSandQuantityForSlab()
@@ -69,19 +67,10 @@ class Slab
 
     public function getSandPriceForSlab()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM sand";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $sandObj = new Sand();
+        $sandCost = $this->getSandQuantityForSlab()*$sandObj->getPriceOfSand();
 
-            $sandPrice =  $rs * $this->getSandQuantityForSlab();
-            return $sandPrice;
-
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $sandCost;
     }
 
     public function getMetalQuantityForSlab()
@@ -92,19 +81,10 @@ class Slab
 
     public function getMetalPriceForSlab()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM metal";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $matalObj = new Matel();
+        $metalCost = $this->getMetalQuantityForSlab()*$matalObj->getPriceOfMetal();//total 50kg cement bags
 
-            $metalPrice =  $rs * $this->getMetalQuantityForSlab();
-            return $metalPrice;
-
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $metalCost;
     }
 
     public function getReinforcementQuantityForSlab()
@@ -115,19 +95,11 @@ class Slab
 
     public function getReinforcementPriceForSlab()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM reinforcement";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $rainforcementbarsObj = new RainforceentBars();
+        $rainforcementbars = $this->getReinforcementQuantityForSlab()*$rainforcementbarsObj->getPriceOfReinforcementBars();//total 50kg cement bags
 
-            $reinforcementPrice =  $rs * $this->getReinforcementQuantityForSlab();
-            return $reinforcementPrice;
+        return $rainforcementbars;
 
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
     }
 
     public function getBindingWiresQuantityForSlab()
@@ -138,27 +110,17 @@ class Slab
 
     public function getBindingWiresPriceForSlab()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM bindingWires";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $bindingWiresObj = new BindingWires();
+        $metalCost = $this->getBindingWiresQuantityForSlab()*$bindingWiresObj->getPriceOfBindingWires();//total 50kg cement bags
 
-            $bindingWiresPrice =  $rs * $this->getBindingWiresQuantityForSlab();
-            return $bindingWiresPrice;
+        return $metalCost;
 
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        } 
     }
 
     public function getTotalCostForSlab()
     {
-        $concreteCostOfSlab = $this->getCementPriceForSlab() + $this->getSandPriceForSlab() + $this->getMetalPriceForSlab(); // concrete cost for slab
-        $rCostOfSlab = $this->getReinforcementPriceForSlab() + $this->getBindingWiresPriceForSlab(); //steels and wires cost for slab
-
-        $totalSlabCost = ($concreteCostOfSlab + $rCostOfSlab) * $this->numberOfSlabs;
-        return $totalSlabCost;
+        $totalCost = $this->getCementPriceForSlab()+$this->getSandPriceForSlab()+$this->getMetalPriceForSlab()+$this->getReinforcementPriceForSlab()+$this->getBindingWiresPriceForSlab();
+      
+        return $totalCost;
     }
 }
