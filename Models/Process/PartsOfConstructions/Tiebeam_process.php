@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
   exit();
 }
 
-require_once '../../Classess/PartsOfConstructions/Columns.php';
-use classes\Columns;
+require_once '../../Classess/PartsOfConstructions/Tiebeam.php';
+use classes\Tiebeam;
 
 // Get the posted data
 $data = json_decode(file_get_contents("php://input"));
@@ -38,18 +38,18 @@ if($unit ==="ft"){
   
 }
 
-$columnObj = new Columns($length, $width, $height);
+$tiebeamObj = new Tiebeam($length, $width, $height);
 
 // Process the data or perform necessary actions
 $response = array(
   "message" => "Data received successfully",
-  "matel" => $columnObj->getMetalQuantityForColumn(),
-  "cement" => $columnObj->getCementQuantityForColumn(),
-  "sand" => $columnObj->getSandQuantityForColumn(),
-  "rainforcementBars" => $columnObj->getReinforcementQuantityForColumn(),
-  "bindingWires" => $columnObj->getBindingWiresQuantityForColumn(),
-  "cost" => $columnObj->getTotalCostForColumn(),
-  "rs" => $columnObj->getReinforcementPriceForColumn(),
+  "matel" => $tiebeamObj->getMetalQuantityForTiebeam(),
+  "cement" => $tiebeamObj->getCementQuantityForTiebeam(),
+  "sand" => $tiebeamObj->getSandQuantityForTiebeam(),
+  "rainforcementBars" => $tiebeamObj->getReinforcementQuantityForTiebeam(),
+  "bindingWires" => $tiebeamObj->getBindingWiresQuantityForTiebeam(),
+  "cost" => $tiebeamObj->getTotalCostForTiebeam(),
+  "rs" => $tiebeamObj->getReinforcementPriceForTiebeam(),
 
 );
 

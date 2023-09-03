@@ -1,20 +1,28 @@
 <?php
-require './boq-master-backend/config/DbConnector.php';
+namespace classes;
+include_once 'Cement.php';
+include_once 'Matel.php';
+include_once 'Sand.php';
+include_once 'RainforceentBars.php';
+include_once 'BindingWires.php';
 
-use boq-master-backend\config\DbConnector;
-use PDO;
-use PDOException;
+use RowMaterials\BindingWires;
+use RowMaterials\Cement;
+use RowMaterials\Matel;
+use RowMaterials\RainforceentBars;
+use RowMaterials\Sand;
 
-class Tiebeams
+class Tiebeam
 {
-    private $length;
-    private $width;
-    private $height;
+    private $length; // length of the Tiebeam
+    private $width; // width of the Tiebeam
+    private $height; // thickness of the Tiebeam
     private $cement = 11; //11 50Kg bags for one cubic meter
     private $sand = 15; //cubic feet for one cubic meter
     private $metal = 30; // cubic feet for one cubic meter
-    private $reinforcementBars = 3.556; //Reinforcement bars square meter -1 for Kg
-    private $bindingWires = $reinforcementBars * 0.01; //Binding wires square meter -1 for Kg
+    private $reinforcementBars = 20.202; //Reinforcement bars square meter -1 for Kg
+    private $bindingWires = 20.202 * 0.01; //Binding wires square meter -1 for Kg
+    private $numberOfTiebeams;
 
     public function __construct($length, $width, $height)
     {
@@ -43,19 +51,11 @@ class Tiebeams
 
     public function getCementPriceForTiebeam()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM cement";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $cementObj = new Cement();
+        $cementCost = $this->getCementQuantityForTiebeam()*$cementObj->getPriceOfCementBag();
 
-            $cementPrice =  $rs * $this->getCementQuantityForTiebeam();
-            return $cementPrice;
-            
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $cementCost;
+
     }
 
     public function getSandQuantityForTiebeam()
@@ -66,19 +66,10 @@ class Tiebeams
 
     public function getSandPriceForTiebeam()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM sand";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $sandObj = new Sand();
+        $sandCost = $this->getSandQuantityForTiebeam()*$sandObj->getPriceOfSand();
 
-            $sandPrice =  $rs * $this->getSandQuantityForTiebeam();
-            return $sandPrice;
-
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $sandCost;
     }
 
     public function getMetalQuantityForTiebeam()
@@ -89,19 +80,10 @@ class Tiebeams
 
     public function getMetalPriceForTiebeam()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM metal";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $matalObj = new Matel();
+        $metalCost = $this->getMetalQuantityForTiebeam()*$matalObj->getPriceOfMetal();//total 50kg cement bags
 
-            $metalPrice =  $rs * $this->getMetalQuantityForTiebeam();
-            return $metalPrice;
-
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $metalCost;
     }
 
     public function getReinforcementQuantityForTiebeam()
@@ -112,19 +94,11 @@ class Tiebeams
 
     public function getReinforcementPriceForTiebeam()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM reinforcement";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $rainforcementbarsObj = new RainforceentBars();
+        $rainforcementbars = $this->getReinforcementQuantityForTiebeam()*$rainforcementbarsObj->getPriceOfReinforcementBars();//total 50kg cement bags
 
-            $reinforcementPrice =  $rs * $this->getReinforcementQuantityForTiebeam();
-            return $reinforcementPrice;
+        return $rainforcementbars;
 
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
     }
 
     public function getBindingWiresQuantityForTiebeam()
@@ -135,27 +109,17 @@ class Tiebeams
 
     public function getBindingWiresPriceForTiebeam()
     {
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM bindingWires";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+        $bindingWiresObj = new BindingWires();
+        $metalCost = $this->getBindingWiresQuantityForTiebeam()*$bindingWiresObj->getPriceOfBindingWires();//total 50kg cement bags
 
-            $bindingWiresPrice =  $rs * $this->getBindingWiresQuantityForTiebeam();
-            return $bindingWiresPrice;
+        return $metalCost;
 
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        } 
     }
 
     public function getTotalCostForTiebeam()
     {
-        $concreteCostOfTiebeam = $this->getCementPriceForTiebeam() + $this->getSandPriceForTiebeam() + $this->getMetalPriceForTiebeam(); // concrete cost for Tiebeam
-        $rCostOfTiebeam = $this->getReinforcementPriceForTiebeam() + $this->getBindingWiresPriceForTiebeam(); //steels and wires cost for Tiebeam
-
-        $totalTiebeamCost = $concreteCostOfTiebeam + $rCostOfTiebeam;
-        return $totalTiebeamCost;
+        $totalCost = $this->getCementPriceForTiebeam()+$this->getSandPriceForTiebeam()+$this->getMetalPriceForTiebeam()+$this->getReinforcementPriceForTiebeam()+$this->getBindingWiresPriceForTiebeam();
+      
+        return $totalCost;
     }
 }

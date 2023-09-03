@@ -1,38 +1,47 @@
 <?php
-require './boq-master-backend/config/DbConnector.php';
+namespace classes;
+include_once 'Cement.php';
+include_once 'Matel.php';
+include_once 'Sand.php';
+include_once 'RainforceentBars.php';
+include_once 'BindingWires.php';
 
-use boq-master-backend\config\DbConnector;
-use PDO;
-use PDOException;
+use RowMaterials\BindingWires;
+use RowMaterials\Cement;
+use RowMaterials\Matel;
+use RowMaterials\RainforceentBars;
+use RowMaterials\Sand;
 
-class Column{
-    private $length;
-    private $width;
-    private $height;
+class Columns
+{
+    private $length; // length of the Column
+    private $width; // width of the Column
+    private $height; // thickness of the Column
     private $cement = 11; //11 50Kg bags for one cubic meter
-    private $sand = 15;//cubic feet for one cubic meter
-    private $metal = 30;// cubic feet for one cubic meter
-    private $reinforcementBars = 3.556;//Reinforcement bars square meter -1 for Kg
-    private $bindingWires = $reinforcementBars*0.01; //Binding wires square meter -1 for Kg
+    private $sand = 15; //cubic feet for one cubic meter
+    private $metal = 30; // cubic feet for one cubic meter
+    private $reinforcementBars = 20.202; //Reinforcement bars square meter -1 for Kg
+    private $bindingWires = 20.202 * 0.01; //Binding wires square meter -1 for Kg
     private $numberOfColumns;
 
-    public function __construct($length,$width,$height,$numberOfColumns)
+    public function __construct($length, $width, $height)
     {
         $this->length = $length;
         $this->width = $width;
         $this->height = $height;
-        $this->numberOfColumns = $numberOfColumns;
     }
 
-    public function getVolOfColumn(){
-        $vol = $this->length*$this->width*$this->height; // in cubic meters
+    public function getVolOfColumn()
+    {
+        $vol = $this->length * $this->width * $this->height; // in cubic meters
         return $vol;
-    } 
+    }
 
-    public function getSqOfColumn(){
-        $sq = $this->length*$this->width; // in square meters
+    public function getSqOfColumn()
+    {
+        $sq = $this->length * $this->width; // in square meters
         return $sq;
-    } 
+    }
 
     public function getCementQuantityForColumn()
     {
@@ -40,20 +49,13 @@ class Column{
         return $cementQuantity;
     }
 
-    public function getCementPriceForColumn(){
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM cement";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+    public function getCementPriceForColumn()
+    {
+        $cementObj = new Cement();
+        $cementCost = $this->getCementQuantityForColumn()*$cementObj->getPriceOfCementBag();
 
-            $cementPrice =  $rs * $this->getCementQuantityForColumn();
-            return $cementPrice;
-            
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $cementCost;
+
     }
 
     public function getSandQuantityForColumn()
@@ -62,20 +64,12 @@ class Column{
         return $sandQuantity;
     }
 
-    public function getSandPriceForColumn(){
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM sand";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+    public function getSandPriceForColumn()
+    {
+        $sandObj = new Sand();
+        $sandCost = $this->getSandQuantityForColumn()*$sandObj->getPriceOfSand();
 
-            $sandPrice =  $rs * $this->getSandQuantityForColumn();
-            return $sandPrice;
-
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $sandCost;
     }
 
     public function getMetalQuantityForColumn()
@@ -84,20 +78,12 @@ class Column{
         return $metalQuantity;
     }
 
-    public function getMetalPriceForColumn(){
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM metal";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+    public function getMetalPriceForColumn()
+    {
+        $matalObj = new Matel();
+        $metalCost = $this->getMetalQuantityForColumn()*$matalObj->getPriceOfMetal();//total 50kg cement bags
 
-            $metalPrice =  $rs * $this->getMetalQuantityForColumn();
-            return $metalPrice;
-
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $metalCost;
     }
 
     public function getReinforcementQuantityForColumn()
@@ -106,20 +92,13 @@ class Column{
         return $reinforcementQuantity;
     }
 
-    public function getReinforcementPriceForColumn(){
-        $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM reinforcement";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+    public function getReinforcementPriceForColumn()
+    {
+        $rainforcementbarsObj = new RainforceentBars();
+        $rainforcementbars = $this->getReinforcementQuantityForColumn()*$rainforcementbarsObj->getPriceOfReinforcementBars();//total 50kg cement bags
 
-            $reinforcementPrice =  $rs * $this->getReinforcementQuantityForColumn();
-            return $reinforcementPrice;
+        return $rainforcementbars;
 
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
     }
 
     public function getBindingWiresQuantityForColumn()
@@ -128,27 +107,19 @@ class Column{
         return $bindingWiresQuantity;
     }
 
-    public function getBindingWiresPriceForColumn(){
-       $dbcon = new DbConnector();
-        try {
-            $con = $dbcon->getConnection();
-            $query = "SELECT price FROM bindingWires";
-            $pstmt = $con->prepare($query);
-            $rs = $pstmt->execute();
+    public function getBindingWiresPriceForColumn()
+    {
+        $bindingWiresObj = new BindingWires();
+        $metalCost = $this->getBindingWiresQuantityForColumn()*$bindingWiresObj->getPriceOfBindingWires();//total 50kg cement bags
 
-            $bindingWiresPrice =  $rs * $this->getBindingWiresQuantityForColumn();
-            return $bindingWiresPrice;
+        return $metalCost;
 
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        } 
     }
 
-    public function getTotalCostForColumn(){
-        $concreteCostOfColumn = $this->getCementPriceForColumn() + $this->getSandPriceForColumn() + $this->getMetalPriceForColumn(); // concrete cost for Columns
-        $rCostOfColumn = $this->getReinforcementPriceForColumn() + $this->getBindingWiresPriceForColumn(); //steels and wires cost for Columns
-
-        $totalColumnCost = ($concreteCostOfColumn + $rCostOfColumn)*$this->numberOfColumns;
-        return $totalColumnCost;
+    public function getTotalCostForColumn()
+    {
+        $totalCost = $this->getCementPriceForColumn()+$this->getSandPriceForColumn()+$this->getMetalPriceForColumn()+$this->getReinforcementPriceForColumn()+$this->getBindingWiresPriceForColumn();
+      
+        return $totalCost;
     }
 }

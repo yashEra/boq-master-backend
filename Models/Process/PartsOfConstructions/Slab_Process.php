@@ -43,12 +43,13 @@ $slabobj = new Slabs($length, $width, $thickness);
 // Process the data or perform necessary actions
 $response = array(
   "message" => "Data received successfully",
-  "matel" => $length,
-//   "cement" => $stairsobj->getCement(),
-//   "sand" => $stairsobj->getSand(),
-//   "rainforcementBars" => $stairsobj->getRainforcementBars(),
-//   "bindingWires" => $stairsobj->getCement(),
-//   "cost" => $stairsobj->getStairesTotalCost(),
+  "matel" => $slabobj->getMetalQuantityForSlab(),
+  "cement" => $slabobj->getCementQuantityForSlab(),
+  "sand" => $slabobj->getSandQuantityForSlab(),
+  "rainforcementBars" => $slabobj->getReinforcementQuantityForSlab(),
+  "bindingWires" => $slabobj->getBindingWiresQuantityForSlab(),
+  "cost" => $slabobj->getTotalCostForSlab(),
+  "rs" => $slabobj->getReinforcementPriceForSlab(),
 
 );
 
