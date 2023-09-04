@@ -5,11 +5,7 @@
 	// namespace config;
 
 // use PDO;
-// use PDOException;
 
-	use PDOException;
-
-	use PDO;
 
     
 	class DbConnector {
