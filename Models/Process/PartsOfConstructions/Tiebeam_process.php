@@ -21,6 +21,7 @@ use classes\Tiebeam;
 $data = json_decode(file_get_contents("php://input"));
 
 $unit = $data->unit;
+$noOfTiebeams = $data->noOfTiebeams;
 
 if($unit ==="ft"){
 
@@ -38,7 +39,7 @@ if($unit ==="ft"){
   
 }
 
-$tiebeamObj = new Tiebeam($length, $width, $height);
+$tiebeamObj = new Tiebeam($length, $width, $height, $noOfTiebeams);
 
 // Process the data or perform necessary actions
 $response = array(

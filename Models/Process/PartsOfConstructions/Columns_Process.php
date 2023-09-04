@@ -17,10 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 require_once '../../Classess/PartsOfConstructions/Columns.php';
 use classes\Columns;
 
-// Get the posted data
+
 $data = json_decode(file_get_contents("php://input"));
 
 $unit = $data->unit;
+$noOfColumns = $data->noOfColumns;
 
 if($unit ==="ft"){
 
@@ -38,9 +39,8 @@ if($unit ==="ft"){
   
 }
 
-$columnObj = new Columns($length, $width, $height);
+$columnObj = new Columns($length, $width, $height, $noOfColumns);
 
-// Process the data or perform necessary actions
 $response = array(
   "message" => "Data received successfully",
   "matel" => $columnObj->getMetalQuantityForColumn(),

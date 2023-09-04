@@ -22,24 +22,25 @@ class Columns
     private $metal = 30; // cubic feet for one cubic meter
     private $reinforcementBars = 20.202; //Reinforcement bars square meter -1 for Kg
     private $bindingWires = 20.202 * 0.01; //Binding wires square meter -1 for Kg
-    private $numberOfColumns;
+    private $noOfColumns;
 
-    public function __construct($length, $width, $height)
+    public function __construct($length, $width, $height, $noOfColumns)
     {
         $this->length = $length;
         $this->width = $width;
         $this->height = $height;
+        $this->noOfColumns = $noOfColumns;
     }
 
     public function getVolOfColumn()
     {
-        $vol = $this->length * $this->width * $this->height; // in cubic meters
+        $vol = $this->length * $this->width * $this->height*$this->noOfColumns; // in cubic meters
         return $vol;
     }
 
     public function getSqOfColumn()
     {
-        $sq = $this->length * $this->width; // in square meters
+        $sq = $this->length * $this->width*$this->noOfColumns; // in square meters
         return $sq;
     }
 

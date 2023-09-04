@@ -22,24 +22,25 @@ class Tiebeam
     private $metal = 30; // cubic feet for one cubic meter
     private $reinforcementBars = 20.202; //Reinforcement bars square meter -1 for Kg
     private $bindingWires = 20.202 * 0.01; //Binding wires square meter -1 for Kg
-    private $numberOfTiebeams;
+    private $noOfTiebeams;
 
-    public function __construct($length, $width, $height)
+    public function __construct($length, $width, $height, $noOfTiebeams)
     {
         $this->length = $length;
         $this->width = $width;
         $this->height = $height;
+        $this->noOfTiebeams = $noOfTiebeams;
     }
 
     public function getVolOfTiebeam()
     {
-        $vol = $this->length * $this->width * $this->height; // in cubic meters
+        $vol = $this->length * $this->width * $this->height* $this->noOfTiebeams; // in cubic meters
         return $vol;
     }
 
     public function getSqOfTiebeam()
     {
-        $sq = $this->length * $this->width; // in square meters
+        $sq = $this->length * $this->width* $this->noOfTiebeams; // in square meters
         return $sq;
     }
 
@@ -88,7 +89,7 @@ class Tiebeam
 
     public function getReinforcementQuantityForTiebeam()
     {
-        $reinforcementQuantity = $this->reinforcementBars * $this->getSqOfTiebeam();
+        $reinforcementQuantity = $this->reinforcementBars * $this->getVolOfTiebeam();
         return $reinforcementQuantity;
     }
 
@@ -103,7 +104,7 @@ class Tiebeam
 
     public function getBindingWiresQuantityForTiebeam()
     {
-        $bindingWiresQuantity = $this->bindingWires * $this->getSqOfTiebeam();
+        $bindingWiresQuantity = $this->bindingWires * $this->getVolOfTiebeam();
         return $bindingWiresQuantity;
     }
 
