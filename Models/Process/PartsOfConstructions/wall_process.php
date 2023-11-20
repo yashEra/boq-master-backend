@@ -1,34 +1,34 @@
 <?php
-
-// use PartsOfConstructions\Walls;
-
 header("Content-Type: application/json");
 
-// Allow requests from your React app's origin
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Update with your React app's URL
+header("Access-Control-Allow-Origin: http://localhost:3000");
 
-// Allow specific headers and methods
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
-// Check for preflight (OPTIONS) request
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
   http_response_code(204);
   exit();
 }
 
 require_once '../../Classess/PartsOfConstructions/Walls.php';
+require_once '../../Classess/PartsOfConstructions/UnitRates.php';
 
+use RowMaterials\UnitRates;
 use PartsOfConstructions\Walls;
 
 // Get the posted data
 $data = json_decode(file_get_contents("php://input"));
 
-// Example: Accessing the "height", "length", and "unit" fields
-// $height = $data->height;
-// $length = $data->length;
+
 $unit = $data->unit;
 $brickTypes = $data->brickTypes;
+$type=$data->brickTypeOption;
+
+
+if ($brickTypes =='cementBrick' || $brickTypes =='Cement Brick') {
+  $type = 'N/A';
+}
 
 if($unit ==="ft"){
 
@@ -39,21 +39,22 @@ if($unit ==="ft"){
   $height = $data->height;
   $length = $data->length;
 }
-
-$wallobj = new Walls($height, $length, $brickTypes);
+$fwallUnitRate = 1000;
+// $rate = 999;
+// echo $brickTypes;
+$wallobj = new Walls($height, $length, $brickTypes, $type);
+$ratesobj = new UnitRates();
 
 $noOfBricks = $wallobj->getBricksQuantity();
 
 // Process the data or perform necessary actions
 $response = array(
   "message" => "Data received successfully",
-  "numberOfBricks" => $wallobj->getBricksQuantity(),
-  "length" => $length,
-  "unit" => $unit,
-  "brickType" => $brickTypes,
-  "CementKg" =>$wallobj->getcementQuantity(),
-  "Sand" =>$wallobj->getSandQuantity(),
-  "cost" => $wallobj->getWallCost()
+  "description" => $wallobj->getWallDec(),
+  "unitRate" => $ratesobj->getRateOfwall($brickTypes, $type),
+  "area" =>$wallobj->getWallArea(),
+  "wallFinishingCost" =>$wallobj->getWallArea()*$fwallUnitRate,
+  "cost" => $wallobj->getWallCost(),
 );
 
 
